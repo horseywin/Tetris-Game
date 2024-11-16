@@ -45,7 +45,7 @@ class game:
     def main(self):
         global current
         my_game.apply_gravity()
-        my_game.move_shape(current, 90)
+        my_game.move_shape(current, -90)
         my_game.clear()
         my_game.update_shapes()
         #os.system('clear')
@@ -66,9 +66,10 @@ class game:
                 try:
                     self.contents[y][x] = character
                 except:
-                    raise IndexError('failed to insert shape: index out of range')
                     print('x', x)
                     print('y', y)
+                    raise IndexError('failed to insert shape: index out of range')
+                    
             #else:
                 #print('REFUSED TO EXIT BORDER')
 
@@ -97,7 +98,7 @@ class game:
                 #print('gravity stopped')
         
     def in_border(self, x, y):
-        return all([x in range(0, self.x + 1), y in range(0, self.y + 1)])
+        return all([x in range(0, self.x), y in range(0, self.y)])
 
     def is_valid(self, shape):
         #checks if the shape is valid
@@ -120,7 +121,7 @@ class game:
         #Makes an instance of the {shape} and checks if all the cords are valid
         if direction in [90, -90]:
             test = type(shape)(shape.x + (directions[direction] * move_amount), shape.y, shape.rotation, shape.color)
-            if self.is_valid(test):
+            if self.is_valid(type(test)(test.x, test.y, test.rotation, test.color)):
                 print(f'INSERTING SHAPE: \n X = {test.x} \n Y = {test.y}')
                 print('TEST IS VALID YOU MAY PROCEED')
                 shape.x = test.x
@@ -168,7 +169,7 @@ my_game = game()
 
 my_game.add_shape(square(4, 10, 0, colors['yellow']))
 current = my_game.summon_shape(line(3, 4, 90, colors['yellow']))
-print(my_game.is_valid(line(10, 6, 90, colors['pink'])))
+print(my_game.is_valid(line(10, 6, 0, colors['pink'])))
 for i in range(20):
     current = my_game.shapes[-1]
     my_game.main()
