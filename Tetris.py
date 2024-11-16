@@ -1,7 +1,7 @@
-#from pynput import keyboard
+from pynput import keyboard
 #import threading
-import curses
-from curses import wrapper
+
+import keyboard
 import os
 import time
 import random
@@ -46,12 +46,16 @@ class game:
     def main(self):
         global current
         my_game.apply_gravity()
-        my_game.move_shape(current, -90)
+        move = str(input('MOVE'))
+        if  move == 'a':
+            my_game.move_shape(current, -90)
+        elif move == 'd':
+            my_game.move_shape(current, 90)
         my_game.clear()
         my_game.update_shapes()
-        #os.system('clear')
+        os.system('clear')
         print(my_game.get_printable())
-        time.sleep(0.2)
+        #time.sleep(0.2)
 
 
     def get_merged_rows(self):
@@ -61,7 +65,7 @@ class game:
         return '\n'.join(self.get_merged_rows())
 
     def insert_shape(self, shape, character):
-        print(f'INSERTING SHAPE: \n X = {shape.x} \n Y = {shape.y}')
+        #print(f'INSERTING SHAPE: \n X = {shape.x} \n Y = {shape.y}')
         for x, y in shape.get_cords():
             if x >= 0:    
                 try:
@@ -116,15 +120,15 @@ class game:
         random.choice(rotations),
         random_color)
         )
-        print('summoned shape')
+        #print('summoned shape')
 
     def move_shape(self, shape, direction, move_amount=1):
         #Makes an instance of the {shape} and checks if all the cords are valid
         if direction in [90, -90]:
             test = type(shape)(shape.x + (directions[direction] * move_amount), shape.y, shape.rotation, shape.color)
             if self.is_valid(type(test)(test.x, test.y, test.rotation, test.color)):
-                print(f'INSERTING SHAPE: \n X = {test.x} \n Y = {test.y}')
-                print('TEST IS VALID YOU MAY PROCEED')
+                #print(f'INSERTING SHAPE: \n X = {test.x} \n Y = {test.y}')
+                #print('TEST IS VALID YOU MAY PROCEED')
                 shape.x = test.x
             else:
                 print('IS NOT VALID (test shape)')
@@ -168,11 +172,13 @@ class line(shape):
 
 my_game = game()
 
-#my_game.add_shape(square(4, 10, 0, colors['yellow']))
-#current = my_game.summon_shape(line(3, 4, 90, colors['yellow']))
-#for i in range(20):
-   # current = my_game.shapes[-1]
-    #my_game.main()
+my_game.add_shape(square(4, 10, 0, colors['yellow']))
+current = my_game.summon_shape(line(3, 4, 90, colors['yellow']))
+for i in range(5000):
+    current = my_game.shapes[-1]
+    if i in [10, 20, 30, 40, 50]:
+        current = my_game.summon_shape(line(3, 4, 90, colors['yellow']))
+    my_game.main()
 #testing
 
 """
