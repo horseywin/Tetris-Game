@@ -1,16 +1,12 @@
+#from pynput import keyboard
+#import threading
 import curses
+from curses import wrapper
 import os
 import time
 import random
 import math
-#key.char == 'w'
-#listiner.start()
-#listener.stop()
-# Listen for keyboard events
 
-def main(stdscr):
-    stdscr.nodelay(1)   # Non-blocking input
-    stdscr.timeout(100) # Refresh every 100ms
 
 colors = {
     'red':'🟥',
