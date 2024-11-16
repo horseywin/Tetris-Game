@@ -1,4 +1,4 @@
-from pynput import keyboard
+import curses
 import os
 import time
 import random
@@ -7,6 +7,11 @@ import math
 #listiner.start()
 #listener.stop()
 # Listen for keyboard events
+
+def main(stdscr):
+    stdscr.nodelay(1)   # Non-blocking input
+    stdscr.timeout(100) # Refresh every 100ms
+
 colors = {
     'red':'🟥',
     'orange':'🟧',
@@ -167,12 +172,11 @@ class line(shape):
 
 my_game = game()
 
-my_game.add_shape(square(4, 10, 0, colors['yellow']))
-current = my_game.summon_shape(line(3, 4, 90, colors['yellow']))
-print(my_game.is_valid(line(10, 6, 0, colors['pink'])))
-for i in range(20):
-    current = my_game.shapes[-1]
-    my_game.main()
+#my_game.add_shape(square(4, 10, 0, colors['yellow']))
+#current = my_game.summon_shape(line(3, 4, 90, colors['yellow']))
+#for i in range(20):
+   # current = my_game.shapes[-1]
+    #my_game.main()
 #testing
 
 """
