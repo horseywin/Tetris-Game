@@ -42,6 +42,17 @@ class game:
         self.shapes = []
         self.gravity_scale = gravity_scale
 
+    def main(self):
+        global current
+        my_game.apply_gravity()
+        my_game.move_shape(current, 90)
+        my_game.clear()
+        my_game.update_shapes()
+        #os.system('clear')
+        print(my_game.get_printable())
+        time.sleep(0.2)
+
+
     def get_merged_rows(self):
         return list(map(lambda row: ''.join(row), self.contents))
 
@@ -49,6 +60,7 @@ class game:
         return '\n'.join(self.get_merged_rows())
 
     def insert_shape(self, shape, character):
+        print(f'INSERTING SHAPE: \n X = {shape.x} \n Y = {shape.y}')
         for x, y in shape.get_cords():
             if x >= 0:    
                 try:
@@ -57,8 +69,8 @@ class game:
                     raise IndexError('failed to insert shape: index out of range')
                     print('x', x)
                     print('y', y)
-            else:
-                print('REFUSED TO EXIT BORDER')
+            #else:
+                #print('REFUSED TO EXIT BORDER')
 
     def clear(self):
         self.contents = [[colors['white'] for column in range(self.x)] for row in range(self.y)]
@@ -71,20 +83,18 @@ class game:
         for shape in self.shapes:  
                 self.insert_shape(shape, shape.color)
 
-
-
     def apply_gravity(self):
         
         for shape in self.shapes:
             print([y for x, y in shape.get_cords()])
             print([y < self.y - 1 for x, y in shape.get_cords()])
             if all([y < self.y - 1 for x, y in shape.get_cords()]):
-                print('gravity touch test', [self.contents[y+1][x] == colors['white'] or (x, y+1) in shape.get_cords() for x, y in shape.get_cords()])
+                #print('gravity touch test', [self.contents[y+1][x] == colors['white'] or (x, y+1) in shape.get_cords() for x, y in shape.get_cords()])
                 if all([self.contents[y+1][x] == colors['white'] or (x, y+1) in shape.get_cords() for x, y in shape.get_cords()]):   
-                    print("appling gravity")
+                    #print("appling gravity")
                     shape.y += self.gravity_scale
-            else:
-                print('gravity stopped')
+            #else:
+                #print('gravity stopped')
         
     def in_border(self, x, y):
         return all([x in range(0, self.x + 1), y in range(0, self.y + 1)])
@@ -93,17 +103,7 @@ class game:
         #checks if the shape is valid
         return all([self.in_border(x, y) for x, y in shape.get_cords()])
 
-    def main(self):
-        global current
-        my_game.apply_gravity()
-        #my_game.move_shape(current, -90)
-        my_game.clear()
-        
-        my_game.update_shapes()
-        #os.system('clear')
-        print(my_game.get_printable())
-        time.sleep(0.2)
-
+    
     def summon_shape(self, shape):
         random_color = colors['white']
         while random_color == colors['white']:
@@ -119,9 +119,13 @@ class game:
     def move_shape(self, shape, direction, move_amount=1):
         #Makes an instance of the {shape} and checks if all the cords are valid
         if direction in [90, -90]:
-            test = type(shape)(x + (directions[direction] * move_amount), shape.y, shape.rotation, shape.color)
+            test = type(shape)(shape.x + (directions[direction] * move_amount), shape.y, shape.rotation, shape.color)
             if self.is_valid(test):
-                pass
+                print(f'INSERTING SHAPE: \n X = {test.x} \n Y = {test.y}')
+                print('TEST IS VALID YOU MAY PROCEED')
+                shape.x = test.x
+            else:
+                print('IS NOT VALID (test shape)')
     
 
 class shape:
@@ -164,14 +168,10 @@ my_game = game()
 
 my_game.add_shape(square(4, 10, 0, colors['yellow']))
 current = my_game.summon_shape(line(3, 4, 90, colors['yellow']))
-print(my_game.in_border(10, 21))
+print(my_game.is_valid(line(10, 6, 90, colors['pink'])))
 for i in range(20):
     current = my_game.shapes[-1]
-    
     my_game.main()
-    
-    
-    print([type(shape) for shape in my_game.shapes])
 #testing
 
 """
