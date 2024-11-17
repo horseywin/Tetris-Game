@@ -8,7 +8,8 @@ import math
 import copy
 
 def on_press(key):
-
+    global my_game
+    global FORCE_STOP
     if  key == keyboard.Key.left:
             my_game.move_shape(current, -90)
     elif key == keyboard.Key.right:
@@ -19,6 +20,7 @@ def on_press(key):
     # Exit when the 'Esc' key is pressed
     if key == keyboard.Key.esc:
         print("Exiting...")
+        FORCE_STOP = True
         return False  # Stops the listener
 
 def start_listener():
@@ -27,7 +29,7 @@ def start_listener():
 
 listener_thread = threading.Thread(target=start_listener)
 listener_thread.start()
-
+FORCE_STOP = False
 
 colors = {
     'red':'🟥',
@@ -71,7 +73,7 @@ class game:
         my_game.update_shapes()
         os.system('clear')
         print(my_game.get_printable())
-        time.sleep(1)
+        time.sleep(0.2)
 
 
     def get_merged_rows(self):
@@ -218,9 +220,12 @@ my_game = game()
 
 my_game.add_shape(square(4, 10, 0, colors['yellow']))
 current = my_game.summon_shape(line(3, 4, 90, colors['yellow']))
-for i in range(5000):
-    current = my_game.shapes[-1]
-    my_game.main()
+for i in range(100):
+    if not FORCE_STOP:
+        current = my_game.shapes[-1]
+        my_game.main()
+    else:
+        print("STOPPING ALL PROCESSES")
 
 listener_thread.join()
 #testing
