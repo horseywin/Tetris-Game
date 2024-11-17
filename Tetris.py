@@ -59,17 +59,22 @@ directions = {
     
 }
 
+
 class game:
-    def __init__(self, x=10, y=20, gravity_scale=1):
+    global shapes
+    def __init__(self, x=10, y=20, gravity_scale=1, tick_speed=0.2):
         self.x = x
         self.y = y
         self.contents = [[colors['white'] for column in range(self.x)] for row in range(self.y)]
         self.shapes = []
         self.gravity_scale = gravity_scale
+        self.tick_speed = tick_speed
 
     def main(self):
         global current
         global frame_inspect
+        if not my_game.apply_gravity()[-1]:
+            self.summon_specifed_shape(line(1, 2, 90, colors['blue']))
         my_game.apply_gravity()
         my_game.clear()
         my_game.update_shapes()
@@ -77,10 +82,7 @@ class game:
             os.system('clear')
             print('\n')
         print(my_game.get_printable())
-        if not self.is_shape_movable(current):
-            self.summon_shape(line(0, 0, 90, '3'))
-            time.sleep(1)
-        time.sleep(0.2)
+        time.sleep(self.tick_speed)
 
     def get_merged_rows(self):
         return list(map(lambda row: ''.join(row), self.contents))
@@ -115,7 +117,7 @@ class game:
                 self.insert_shape(shape, shape.color)
 
     def apply_gravity(self):
-        
+        success_list = []
         for shape in self.shapes:
             if debug: print([y for x, y in shape.get_cords()])
             if debug: print([y < self.y - 1 for x, y in shape.get_cords()])
@@ -124,11 +126,14 @@ class game:
                 if all([self.contents[y+1][x] == colors['white'] or (x, y+1) in shape.get_cords() for x, y in shape.get_cords()]):   
                     if debug: print("appling gravity")
                     shape.y += self.gravity_scale
+                    success_list.append(True)
                 else:
                     if debug: print('GRAVITY STOPPED DUE TO COLLISION OR OBSOLETE CORD')
+                    success_list.append(False)
             else:
                 if debug: print('gravity stopped')
-        
+                success_list.append(False)
+        return success_list
     def in_border(self, x, y):
         return all([x in range(0, self.x), y in range(0, self.y)])
 
@@ -137,7 +142,7 @@ class game:
         return all([self.in_border(x, y) for x, y in shape.get_cords()])
 
     
-    def summon_shape(self, shape):
+    def summon_specifed_shape(self, shape):
         random_color = colors['white']
         while random_color == colors['white']:
             random_color = random.choice(list(colors.values()))
@@ -179,6 +184,17 @@ class game:
             [self.contents[y][x + 1] == colors['white'] or (x + 1, y) in shape.get_cords() for x, y in shape.get_cords()]
         )
         return can_move_left or can_move_right
+
+    def summon_random_shape(self):
+        random_color = colors['white']
+        while random_color == colors['white']:
+            random_color = random.choice(list(colors.values()))
+        return self.add_shape(type(shape)(
+        self.x // 2 - 1,
+        0,
+        random.choice(rotations),
+        random_color)
+        )
 
 
 class shape:
@@ -244,10 +260,17 @@ def next_rotation(current_direction):
     else:
         raise SyntaxError('DIRECTION NOT FOUND')
 
+#defining all shapes with examples:
+
+all_shapes = [
+    square(1, 2, 90, colors['red']), 
+    line(1, 1, 90, colors['black'])
+]
+
 my_game = game()
 
 my_game.add_shape(square(4, 10, 0, colors['yellow']))
-current = my_game.summon_shape(line(3, 4, 90, colors['yellow']))
+current = my_game.summon_specifed_shape(line(3, 4, 90, colors['yellow']))
 for i in range(100):
     if not FORCE_STOP:
         current = my_game.shapes[-1]
