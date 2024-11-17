@@ -27,6 +27,7 @@ def start_listener():
         listener.join()
 
 debug = False
+frame_inspect = True
 listener_thread = threading.Thread(target=start_listener)
 listener_thread.start()
 FORCE_STOP = False
@@ -68,11 +69,15 @@ class game:
 
     def main(self):
         global current
+        global frame_inspect
         my_game.apply_gravity()
         my_game.clear()
         my_game.update_shapes()
-        if not debug: os.system('clear')
+        if not frame_inspect:
+            os.system('clear')
+            print('\n')
         print(my_game.get_printable())
+        print(self.is_shape_movable(current))
         time.sleep(0.2)
 
     def get_merged_rows(self):
@@ -149,11 +154,32 @@ class game:
             if self.is_valid(type(test)(test.x, test.y, test.rotation, test.color)):
                 if all([self.contents[y][x + directions[direction]] == colors['white'] or (x + directions[direction], y) in shape.get_cords() for x, y in shape.get_cords()]):
                     shape.x = test.x
+                    return True
                 else:
                     if debug: print('ANOTHER SHAPE IS IN THE WAY: SHAPE TYPE', type(shape))
+                    return False
             else:
                 if debug: print('IS NOT VALID (test shape)')
-    
+                return False
+        else:
+            return False
+
+    def is_shape_movable(self, shape):
+        # Test moving left
+        test_left = type(shape)(shape.x - 1, shape.y, shape.rotation, shape.color)
+        can_move_left = self.is_valid(test_left) and all(
+            [self.contents[y][x - 1] == colors['white'] or (x - 1, y) in shape.get_cords() for x, y in shape.get_cords()]
+        )
+
+        # Test moving right
+        test_right = type(shape)(shape.x + 1, shape.y, shape.rotation, shape.color)
+        can_move_right = self.is_valid(test_right) and all(
+            [self.contents[y][x + 1] == colors['white'] or (x + 1, y) in shape.get_cords() for x, y in shape.get_cords()]
+        )
+
+        # Return True if either movement is possible
+        return can_move_left or can_move_right
+
 
 class shape:
     def __init__(self, x, y, rotation, color):
