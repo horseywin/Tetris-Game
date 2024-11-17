@@ -27,7 +27,7 @@ def start_listener():
         listener.join()
 
 debug = False
-frame_inspect = True
+frame_inspect = False
 listener_thread = threading.Thread(target=start_listener)
 listener_thread.start()
 FORCE_STOP = False
@@ -77,7 +77,9 @@ class game:
             os.system('clear')
             print('\n')
         print(my_game.get_printable())
-        print(self.is_shape_movable(current))
+        if not self.is_shape_movable(current):
+            self.summon_shape(line(0, 0, 90, '3'))
+            time.sleep(1)
         time.sleep(0.2)
 
     def get_merged_rows(self):
@@ -165,19 +167,17 @@ class game:
             return False
 
     def is_shape_movable(self, shape):
-        # Test moving left
+
         test_left = type(shape)(shape.x - 1, shape.y, shape.rotation, shape.color)
         can_move_left = self.is_valid(test_left) and all(
             [self.contents[y][x - 1] == colors['white'] or (x - 1, y) in shape.get_cords() for x, y in shape.get_cords()]
         )
 
-        # Test moving right
+
         test_right = type(shape)(shape.x + 1, shape.y, shape.rotation, shape.color)
         can_move_right = self.is_valid(test_right) and all(
             [self.contents[y][x + 1] == colors['white'] or (x + 1, y) in shape.get_cords() for x, y in shape.get_cords()]
         )
-
-        # Return True if either movement is possible
         return can_move_left or can_move_right
 
 
