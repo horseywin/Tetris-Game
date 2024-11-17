@@ -51,6 +51,8 @@ class game:
             my_game.move_shape(current, -90)
         elif move == 'd':
             my_game.move_shape(current, 90)
+        elif move == 'w':
+            current.rotate_shape(next_rotation(current.rotation), my_game)
         my_game.clear()
         my_game.update_shapes()
         os.system('clear')
@@ -144,6 +146,18 @@ class shape:
     def get_cords(self):
         print('UNDEFINED')
 
+    def rotate_shape(self, direction, game):
+        if direction in directions:
+            test = self
+            test.rotation = direction
+            if game.is_valid(test):
+                try:
+                    self = test
+                except:
+                    self.rotation = direction
+        else:
+            raise SyntaxError(f"{direction} does not exist")
+
 class square(shape):
     def get_cords(self):
         return [
@@ -155,20 +169,34 @@ class square(shape):
 
 class line(shape):
     def get_cords(self):
-        if self.rotation == 90 or self.rotation == -90:
+        if self.rotation in [180, 0]:
             return [
+            (self.x - 1, self.y),
             (self.x, self.y),
             (self.x + 1, self.y),
-            (self.x + 2, self.y),
-            (self.x + 3, self.y)
+            (self.x + 2, self.y)
             ]
-        else:
+        elif self.rotation in [90, -90]:
             return [
+            (self.x, self.y - 2),
+            (self.x, self.y - 1),
             (self.x, self.y),
-            (self.x, self.y + 1),
-            (self.x, self.y + 2),
-            (self.x, self.y + 3)
+            (self.x, self.y + 1)
             ]
+
+def next_rotation(current_direction):
+    global directions
+    if current_direction in directions:
+        if current_direction == 90:
+            return 180
+        if current_direction == 180:
+            return -90
+        if current_direction == -90:
+            return 0
+        if current_direction == 0:
+            return 90
+    else:
+        raise SyntaxError('DIRECTION NOT FOUND')
 
 my_game = game()
 
@@ -176,8 +204,6 @@ my_game.add_shape(square(4, 10, 0, colors['yellow']))
 current = my_game.summon_shape(line(3, 4, 90, colors['yellow']))
 for i in range(5000):
     current = my_game.shapes[-1]
-    if i in [10, 20, 30, 40, 50]:
-        current = my_game.summon_shape(line(3, 4, 90, colors['yellow']))
     my_game.main()
 #testing
 
