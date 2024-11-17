@@ -1,12 +1,12 @@
 from pynput import keyboard
-#import threading
+import threading
 
 import keyboard
 import os
 import time
 import random
 import math
-
+import copy
 
 colors = {
     'red':'🟥',
@@ -73,8 +73,9 @@ class game:
                 try:
                     self.contents[y][x] = character
                 except:
-                    print('x', x)
-                    print('y', y)
+                    for x, y in shape.get_cords():
+                        print('x', x)
+                        print('y', y)
                     raise IndexError('failed to insert shape: index out of range')
                     
             #else:
@@ -148,13 +149,14 @@ class shape:
 
     def rotate_shape(self, direction, game):
         if direction in directions:
-            test = self
+            print('SUCCESS: STARTING ROTATE FUNCTION')
+            test = copy.deepcopy(self)
             test.rotation = direction
             if game.is_valid(test):
-                try:
-                    self = test
-                except:
-                    self.rotation = direction
+                print('VALID ROTATIONS: CHANGEING CORDS')
+                self.rotation = direction
+            else:
+                print('NOT TECHNICALLY VALID...CANCELLING ROTATION')
         else:
             raise SyntaxError(f"{direction} does not exist")
 
