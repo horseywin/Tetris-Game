@@ -130,9 +130,9 @@ class game:
         if direction in [90, -90]:
             test = type(shape)(shape.x + (directions[direction] * move_amount), shape.y, shape.rotation, shape.color)
             if self.is_valid(type(test)(test.x, test.y, test.rotation, test.color)):
-                #print(f'INSERTING SHAPE: \n X = {test.x} \n Y = {test.y}')
-                #print('TEST IS VALID YOU MAY PROCEED')
-                shape.x = test.x
+                if all([self.contents[y][x + directions[direction]] == colors['white'] or (x + directions[direction], y) in shape.get_cords() for x, y in shape.get_cords()]):
+                    shape.x = test.x
+
             else:
                 print('IS NOT VALID (test shape)')
     
