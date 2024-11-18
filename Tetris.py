@@ -26,8 +26,8 @@ def start_listener():
     with keyboard.Listener(on_press=on_press) as listener:
         listener.join()
 
-debug = False
-frame_inspect = False
+debug = True
+frame_inspect = True
 listener_thread = threading.Thread(target=start_listener)
 listener_thread.start()
 FORCE_STOP = False
