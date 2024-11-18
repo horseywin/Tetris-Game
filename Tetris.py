@@ -188,7 +188,6 @@ class game:
             [self.contents[y][x - 1] == colors['white'] or (x - 1, y) in shape.get_cords() for x, y in shape.get_cords()]
         )
 
-
         test_right = type(shape)(shape.x + 1, shape.y, shape.rotation, shape.color)
         can_move_right = self.is_valid(test_right) and all(
             [self.contents[y][x + 1] == colors['white'] or (x + 1, y) in shape.get_cords() for x, y in shape.get_cords()]
