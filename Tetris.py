@@ -31,6 +31,7 @@ frame_inspect = False
 listener_thread = threading.Thread(target=start_listener)
 listener_thread.start()
 FORCE_STOP = False
+summon_tick = None
 
 colors = {
     'red':'🟥',
@@ -59,9 +60,8 @@ directions = {
     
 }
 
-
 class game:
-    global shapes
+    global all_shapes
     def __init__(self, x=10, y=20, gravity_scale=1, tick_speed=0.2):
         self.x = x
         self.y = y
@@ -73,8 +73,17 @@ class game:
     def main(self):
         global current
         global frame_inspect
+        global summon_tick
         if not my_game.apply_gravity()[-1]:
-            self.summon_specifed_shape(line(1, 2, 90, colors['blue']))
+            print('summon now')
+            my_game.apply_gravity()
+            if summon_tick == 3:
+                self.summon_random_shape()
+            else:
+                summon_tick += 1
+
+        else:
+            summon_tick = 0
         my_game.apply_gravity()
         my_game.clear()
         my_game.update_shapes()
@@ -89,6 +98,7 @@ class game:
 
     def get_printable(self):
         return '\n'.join(self.get_merged_rows())
+#tdjo ltuq yttj xxbn
 
     def insert_shape(self, shape, character):
         #print(f'INSERTING SHAPE: \n X = {shape.x} \n Y = {shape.y}')
@@ -189,7 +199,7 @@ class game:
         random_color = colors['white']
         while random_color == colors['white']:
             random_color = random.choice(list(colors.values()))
-        return self.add_shape(type(shape)(
+        return self.add_shape(type(random.choice(all_shapes))(
         self.x // 2 - 1,
         0,
         random.choice(rotations),
@@ -270,8 +280,8 @@ all_shapes = [
 my_game = game()
 
 my_game.add_shape(square(4, 10, 0, colors['yellow']))
-current = my_game.summon_specifed_shape(line(3, 4, 90, colors['yellow']))
-for i in range(100):
+
+while True:
     if not FORCE_STOP:
         current = my_game.shapes[-1]
         my_game.main()
