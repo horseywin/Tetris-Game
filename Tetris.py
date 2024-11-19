@@ -17,6 +17,7 @@ def on_press(key):
         current.rotate_shape(next_rotation(current.rotation), my_game)
     elif key == keyboard.Key.down:
         my_game.apply_gravity([current])
+        my_game.score += 1
         print('')
 
     # Exit when the 'Esc' key is pressed
@@ -96,6 +97,7 @@ class game:
         if not frame_inspect:
             os.system('clear')
             print('\n')
+        print(f'SCORE: {my_game.score}')
         print(my_game.get_printable())
         time.sleep(self.tick_speed)
 
