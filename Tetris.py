@@ -16,7 +16,7 @@ def on_press(key):
     elif key == keyboard.Key.up:
         current.rotate_shape(next_rotation(current.rotation), my_game)
     elif key == keyboard.Key.down:
-        my_game.move_shape(current, 180)
+        my_game.apply_gravity([current])
         print('')
 
     # Exit when the 'Esc' key is pressed
@@ -88,7 +88,6 @@ class game:
                 self.summon_random_shape()
             else:
                 summon_tick += 1
-
         else:
             summon_tick = 0
         my_game.apply_gravity()
@@ -133,9 +132,13 @@ class game:
         for shape in self.shapes:  
                 self.insert_shape(shape, shape.color)
 
-    def apply_gravity(self):
+    def apply_gravity(self, specifed_shape_list=[]):
         success_list = []
-        for shape in self.shapes:
+        if not specifed_shape_list:
+            list_of_shapes = self.shapes
+        else:
+            list_of_shapes = specifed_shape_list
+        for shape in list_of_shapes:
             if debug: print([y for x, y in shape.get_cords()])
             if debug: print([y < self.y - 1 for x, y in shape.get_cords()])
             if all([y < self.y - 1 for x, y in shape.get_cords()]):
