@@ -15,6 +15,9 @@ def on_press(key):
         my_game.move_shape(current, 90)
     elif key == keyboard.Key.up:
         current.rotate_shape(next_rotation(current.rotation), my_game)
+    elif key == keyboard.Key.down:
+        my_game.move_shape(current, 180)
+        print('')
 
     # Exit when the 'Esc' key is pressed
     if key == keyboard.Key.esc:
@@ -26,8 +29,12 @@ def start_listener():
     with keyboard.Listener(on_press=on_press) as listener:
         listener.join()
 
-debug = True
-frame_inspect = True
+if str(input('DEBUG?')):
+    debug = True
+    frame_inspect = True
+else:
+    debug = False
+    frame_inspect = False
 listener_thread = threading.Thread(target=start_listener)
 listener_thread.start()
 FORCE_STOP = False
@@ -69,7 +76,7 @@ class game:
         self.shapes = []
         self.gravity_scale = gravity_scale
         self.tick_speed = tick_speed
-
+        self.score = 0
     def main(self):
         global current
         global frame_inspect
