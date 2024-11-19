@@ -270,20 +270,16 @@ class square(shape):
 
     def __init__(self, x, y, rotation, color):
         super().__init__(x, y, rotation, color)
-        self.blueprint = {
-            0:[(self.x, self.y), (self.x + 1, self.y), (self.x + 1, self.y + 1), (self.x, self.y + 1)],
-            90:[(self.x, self.y), (self.x + 1, self.y), (self.x + 1, self.y + 1), (self.x, self.y + 1)],
-            -90:[(self.x, self.y), (self.x + 1, self.y), (self.x + 1, self.y + 1), (self.x, self.y + 1)],
-            180:[(self.x, self.y), (self.x + 1, self.y), (self.x + 1, self.y + 1), (self.x, self.y + 1)]
-        }
-
-    def get_cords(self):
-        return [
+        self.blueprint = [
             (self.x, self.y),
             (self.x + 1, self.y),
             (self.x + 1, self.y + 1),
             (self.x, self.y + 1)
             ]
+        
+
+    def get_cords(self):
+        return self.blueprint
 
 class line(shape):
     def get_cords(self):
