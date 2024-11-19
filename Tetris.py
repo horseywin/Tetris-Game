@@ -95,6 +95,7 @@ class game:
         my_game.apply_gravity()
         my_game.clear()
         my_game.update_shapes()
+        #my_game.scan_for_combos()
         if not frame_inspect:
             os.system('clear')
             print('\n')
@@ -227,19 +228,26 @@ class game:
 
     def scan_for_combos(self):
         line_combos = 0
-        for row in self.contents:
-            if all([sqaure == colors['white'] for sqaure in row]):
+        for index, row in enumerate(self.contents):
+            #Check if all sqaures in a line is white
+            if all([sqaure != colors['white'] for sqaure in row]):
                 line_combos += 1
                 for shape in self.shapes:
-                    pass
+                    for cord in shape.get_cords():
+                        if cord in [(x, index) for x in range(0, self.x + 1)]:
+                                #90: [(0, 0),(1, 0),(1, 1),(0, 1)]
+                                for x, y in shape.blueprint[shape.rotation]:
+                                    if cord == (self.x + x, self.y + y):
+                                        shape.blueprint[shape.rotation].pop(cord)
+                            
         if line_combos == 1:
-            self.points += 100 * self.level
+            self.score += 100 * self.level
         elif line_combos == 2:
-            self.points += 300 * self.level
+            self.score += 300 * self.level
         elif line_combos == 3:
-            self.points += 500 * self.level
+            self.score += 500 * self.level
         elif line_combos == 4:
-            self.points += 800 * self.level
+            self.score += 800 * self.level
         
 
 
@@ -270,33 +278,68 @@ class square(shape):
 
     def __init__(self, x, y, rotation, color):
         super().__init__(x, y, rotation, color)
-        self.blueprint = [
-            (self.x, self.y),
-            (self.x + 1, self.y),
-            (self.x + 1, self.y + 1),
-            (self.x, self.y + 1)
-            ]
+        self.blueprint = {
+            0: [
+            (0, 0),
+            (1, 0),
+            (1, 1),
+            (0, 1)
+            ],
+            90: [
+            (0, 0),
+            (1, 0),
+            (1, 1),
+            (0, 1)
+            ],
+            -90: [
+            (0, 0),
+            (1, 0),
+            (1, 1),
+            (0, 1)
+            ],
+            180: [
+            (0, 0),
+            (1, 0),
+            (1, 1),
+            (0, 1)
+            ],
+        }
         
-
     def get_cords(self):
-        return self.blueprint
+        return [(self.x + x, self.y + y) for x, y in self.blueprint[self.rotation]]
 
 class line(shape):
+    def __init__(self, x, y, rotation, color):
+        super().__init__(x, y, rotation, color)
+        self.blueprint = {
+            90: [
+            (0, -2),
+            (0, -1),
+            (0, 0),
+            (0, 1)
+            ],
+            -90: [
+            (0, -2),
+            (0, -1),
+            (0, 0),
+            (0, 1)
+            ],
+            180: [
+            (-1, 0),
+            (0, 0),
+            (1, 0),
+            (2, 0)
+            ],
+            0: [
+            (-1, 0),
+            (0, 0),
+            (1, 0),
+            (2, 0)
+            ],
+        }
+
     def get_cords(self):
-        if self.rotation in [180, 0]:
-            return [
-            (self.x - 1, self.y),
-            (self.x, self.y),
-            (self.x + 1, self.y),
-            (self.x + 2, self.y)
-            ]
-        elif self.rotation in [90, -90]:
-            return [
-            (self.x, self.y - 2),
-            (self.x, self.y - 1),
-            (self.x, self.y),
-            (self.x, self.y + 1)
-            ]
+        return [(self.x + x, self.y + y) for x, y in self.blueprint[self.rotation]]
 
 def next_rotation(current_direction):
     global directions
