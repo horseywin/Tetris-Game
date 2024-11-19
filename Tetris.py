@@ -78,6 +78,7 @@ class game:
         self.gravity_scale = gravity_scale
         self.tick_speed = tick_speed
         self.score = 0
+        self.level = 1
     def main(self):
         global current
         global frame_inspect
@@ -217,6 +218,30 @@ class game:
         random_color)
         )
 
+    """
+    •	Single (1 line cleared): 100 points x current level.
+	•	Double (2 lines cleared): 300 points x current level.
+	•	Triple (3 lines cleared): 500 points x current level.
+	•	Tetris (4 lines cleared at once): 800 points x current level.
+    """
+
+    def scan_for_combos(self):
+        line_combos = 0
+        for row in self.contents:
+            if all([sqaure == colors['white'] for sqaure in row]):
+                line_combos += 1
+                for shape in self.shapes:
+                    pass
+        if line_combos == 1:
+            self.points += 100 * self.level
+        elif line_combos == 2:
+            self.points += 300 * self.level
+        elif line_combos == 3:
+            self.points += 500 * self.level
+        elif line_combos == 4:
+            self.points += 800 * self.level
+        
+
 
 class shape:
     def __init__(self, x, y, rotation, color):
@@ -242,6 +267,16 @@ class shape:
             raise SyntaxError(f"{direction} does not exist")
 
 class square(shape):
+
+    def __init__(self, x, y, rotation, color):
+        super().__init__(x, y, rotation, color)
+        self.blueprint = {
+            0:[(self.x, self.y), (self.x + 1, self.y), (self.x + 1, self.y + 1), (self.x, self.y + 1)],
+            90:[(self.x, self.y), (self.x + 1, self.y), (self.x + 1, self.y + 1), (self.x, self.y + 1)],
+            -90:[(self.x, self.y), (self.x + 1, self.y), (self.x + 1, self.y + 1), (self.x, self.y + 1)],
+            180:[(self.x, self.y), (self.x + 1, self.y), (self.x + 1, self.y + 1), (self.x, self.y + 1)]
+        }
+
     def get_cords(self):
         return [
             (self.x, self.y),
