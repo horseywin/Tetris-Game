@@ -87,6 +87,7 @@ class game:
             print('summon now')
             my_game.apply_gravity()
             if summon_tick == 3:
+                my_game.scan_for_combos()
                 self.summon_random_shape()
             else:
                 summon_tick += 1
@@ -95,7 +96,6 @@ class game:
         my_game.apply_gravity()
         my_game.clear()
         my_game.update_shapes()
-        my_game.scan_for_combos()
         if not frame_inspect:
             os.system('clear')
             print('\n')
@@ -240,9 +240,9 @@ class game:
                         if cord in [(x, index) for x in range(0, self.x + 1)]:
                                 #90: [(0, 0),(1, 0),(1, 1),(0, 1)]
                                 #for each cord in blueprint
-                                for map_index, x, y in enumerate(shape.blueprint[shape.rotation]):
+                                for x, y in shape.blueprint[shape.rotation]:
                                     if cord == (shape.x + x, shape.y + y):
-                                        shape.blueprint[shape.rotation].pop(map_index)
+                                        shape.blueprint[shape.rotation].pop(shape.blueprint[shape.rotation].index((x, y)))
                             
         if line_combos == 1:
             self.score += 100 * self.level
