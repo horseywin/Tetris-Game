@@ -247,7 +247,6 @@ class game:
                                         os.system('clear')
                                         print(self.get_printable())
                                         time.sleep(0.01)
-                                        self.clear()
                                         
                             
         if line_combos == 1:
