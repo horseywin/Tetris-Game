@@ -108,7 +108,6 @@ class game:
 
     def get_printable(self):
         return '\n'.join(self.get_merged_rows())
-#tdjo ltuq yttj xxbn
 
     def insert_shape(self, shape, character):
         #print(f'INSERTING SHAPE: \n X = {shape.x} \n Y = {shape.y}')
