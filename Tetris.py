@@ -95,7 +95,7 @@ class game:
         my_game.apply_gravity()
         my_game.clear()
         my_game.update_shapes()
-        #my_game.scan_for_combos()
+        my_game.scan_for_combos()
         if not frame_inspect:
             os.system('clear')
             print('\n')
@@ -232,13 +232,17 @@ class game:
             #Check if all sqaures in a line is white
             if all([sqaure != colors['white'] for sqaure in row]):
                 line_combos += 1
+                #scan though shapes
                 for shape in self.shapes:
+                    #scan though cords in each shape
                     for cord in shape.get_cords():
+                        #Checking if the indevidual sqaure matches one of the sqaures in the selected row
                         if cord in [(x, index) for x in range(0, self.x + 1)]:
                                 #90: [(0, 0),(1, 0),(1, 1),(0, 1)]
-                                for x, y in shape.blueprint[shape.rotation]:
-                                    if cord == (self.x + x, self.y + y):
-                                        shape.blueprint[shape.rotation].pop(cord)
+                                #for each cord in blueprint
+                                for map_index, x, y in enumerate(shape.blueprint[shape.rotation]):
+                                    if cord == (shape.x + x, shape.y + y):
+                                        shape.blueprint[shape.rotation].pop(map_index)
                             
         if line_combos == 1:
             self.score += 100 * self.level
