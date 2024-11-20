@@ -161,9 +161,14 @@ class game:
     def in_border(self, x, y):
         return all([x in range(0, self.x), y in range(0, self.y)])
 
-    def is_valid(self, shape):
+    def is_valid(self, test_shape, original_shape):
         #checks if the shape is valid
-        return all([self.in_border(x, y) for x, y in shape.get_cords()])
+        test_contents = copy.deepcopy(self.contents)
+        #Remove original shape from copy test cords
+        for x, y in original_shape.get_cords():
+            test_contents[y][x] = colors['white']
+        
+        return all([self.in_border(x, y) and test_contents[y][x] == colors['white'] for x, y in test_shape.get_cords()])
 
     
     def summon_specifed_shape(self, shape):
@@ -182,7 +187,7 @@ class game:
         #Makes an instance of the {shape} and checks if all the cords are valid
         if direction in [90, -90]:
             test = type(shape)(shape.x + (directions[direction] * move_amount), shape.y, shape.rotation, shape.color)
-            if self.is_valid(type(test)(test.x, test.y, test.rotation, test.color)):
+            if self.is_valid(type(test)(test.x, test.y, test.rotation, test.color), shape):
                 if all([self.contents[y][x + directions[direction]] == colors['white'] or (x + directions[direction], y) in shape.get_cords() for x, y in shape.get_cords()]):
                     shape.x = test.x
                     return True
@@ -194,7 +199,7 @@ class game:
                 return False
         else:
             return False
-
+    """
     def is_shape_movable(self, shape):
 
         test_left = type(shape)(shape.x - 1, shape.y, shape.rotation, shape.color)
@@ -207,7 +212,7 @@ class game:
             [self.contents[y][x + 1] == colors['white'] or (x + 1, y) in shape.get_cords() for x, y in shape.get_cords()]
         )
         return can_move_left or can_move_right
-
+    """
     def summon_random_shape(self):
         random_color = colors['white']
         while random_color == colors['white']:
@@ -218,7 +223,6 @@ class game:
         random.choice(rotations),
         random_color)
         )
-
     """
     •	Single (1 line cleared): 100 points x current level.
 	•	Double (2 lines cleared): 300 points x current level.
@@ -275,7 +279,7 @@ class shape:
             if debug: print('SUCCESS: STARTING ROTATE FUNCTION')
             test = copy.deepcopy(self)
             test.rotation = direction
-            if game.is_valid(test):
+            if game.is_valid(test, self):
                 if debug: print('VALID ROTATIONS: CHANGEING CORDS')
                 self.rotation = direction
             else:
