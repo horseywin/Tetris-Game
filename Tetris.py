@@ -408,7 +408,7 @@ all_shapes = [
     up_left(1, 1, 90, colors['black'])
 ]
 
-my_game = game()
+my_game = game(ttick_speed=0.6)
 
 my_game.add_shape(square(4, 10, 0, colors['yellow']))
 
