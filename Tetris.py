@@ -83,6 +83,7 @@ class game:
         global current
         global frame_inspect
         global summon_tick
+        print(current.rotation)
         if not my_game.apply_gravity()[-1]:
             print('summon now')
             my_game.apply_gravity()
@@ -259,7 +260,6 @@ class game:
             self.score += 800 * self.level
         
 
-
 class shape:
     def __init__(self, x, y, rotation, color):
         self.x = x
@@ -282,6 +282,42 @@ class shape:
                 if debug: print('NOT TECHNICALLY VALID...CANCELLING ROTATION')
         else:
             raise SyntaxError(f"{direction} does not exist")
+    
+    def get_cords(self):
+        return [(self.x + x, self.y + y) for x, y in self.blueprint[self.rotation]]
+
+class up_left(shape):
+    def __init__(self, x, y, rotation, color):
+        super().__init__(x, y, rotation, color)
+        self.blueprint = {
+            #working
+            180: [
+            (-1, -1),
+            (0, -1),
+            (0, 0),
+            (0, 1)
+            ],
+            #working
+            90: [
+            (0, 0),
+            (1, 0),
+            (2, 0),
+            (2, -1)
+            ],
+            -90: [
+            (0, 0),
+            (1, 0),
+            (2, 0),
+            (2, -1)
+            ],
+            
+            0: [
+            (1, 0),
+            (1, 1),
+            (1, 2),
+            (2, 2)
+            ],
+        }
 
 class square(shape):
 
@@ -314,8 +350,6 @@ class square(shape):
             ],
         }
         
-    def get_cords(self):
-        return [(self.x + x, self.y + y) for x, y in self.blueprint[self.rotation]]
 
 class line(shape):
     def __init__(self, x, y, rotation, color):
@@ -347,8 +381,6 @@ class line(shape):
             ],
         }
 
-    def get_cords(self):
-        return [(self.x + x, self.y + y) for x, y in self.blueprint[self.rotation]]
 
 def next_rotation(current_direction):
     global directions
@@ -368,7 +400,8 @@ def next_rotation(current_direction):
 
 all_shapes = [
     square(1, 2, 90, colors['red']), 
-    line(1, 1, 90, colors['black'])
+    line(1, 1, 90, colors['black']),
+    up_left(1, 1, 90, colors['black'])
 ]
 
 my_game = game()
