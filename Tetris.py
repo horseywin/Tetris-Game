@@ -242,6 +242,13 @@ class game:
                                 for x, y in shape.blueprint[shape.rotation]:
                                     if cord == (shape.x + x, shape.y + y):
                                         shape.blueprint[shape.rotation].pop(shape.blueprint[shape.rotation].index((x, y)))
+                                        self.apply_gravity()
+                                        self.update_shapes()
+                                        os.system('clear')
+                                        print(self.get_printable())
+                                        time.sleep(0.01)
+                                        self.clear()
+                                        
                             
         if line_combos == 1:
             self.score += 100 * self.level
