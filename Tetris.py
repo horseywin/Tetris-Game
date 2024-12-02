@@ -511,14 +511,17 @@ all_shapes = [
 
 my_game = game(tick_speed=0.2)
 
-my_game.add_shape(square(4, 10, 0, colors['yellow']))
-
+my_game.summon_random_shape()
+level_score = 0
+#main game loop (this makes the game run!)
 while True:
     if not FORCE_STOP and not game_over:
-        print('not gameover')
-        print(game_over)
         current = my_game.shapes[-1]
         my_game.main()
+        if my_game.tick_speed > 0.001:
+            my_game.tick_speed -= 0.001
+        
+        print(my_game.tick_speed)
     elif game_over:
         game_over_text()
         time.sleep(0.5)
@@ -539,8 +542,12 @@ while True:
                 layer_result += str(number_art[number][layer])
             number_result += '    ' + layer_result + '\n'
         print(number_result)
-        break
-        #break
+        if str(input("Would You Like To Play Again?\ny/n")) == 'y':
+            game_over = False
+            my_game = game()
+            my_game.summon_random_shape()
+        else:
+            break
     else:
         if debug: print("STOPPING ALL PROCESSES")
 
