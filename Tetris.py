@@ -55,6 +55,7 @@ if str(input('DEBUG?')):
 else:
     debug = False
     frame_inspect = False
+
 listener_thread = threading.Thread(target=start_listener)
 listener_thread.start()
 FORCE_STOP = False
@@ -174,11 +175,12 @@ class game:
         self.tick_speed = tick_speed
         self.score = 0
         self.level = 1
+        self.current_rows_cleared = 0
+    
     def main(self):
         global current
         global frame_inspect
         global summon_tick
-        print(current.rotation)
         if not my_game.apply_gravity()[-1]:
             print('summon now')
             my_game.apply_gravity()
@@ -195,7 +197,8 @@ class game:
         if not frame_inspect:
             os.system('clear')
             print('\n')
-        print(f'SCORE: {my_game.score}')
+        print(my_game.current_rows_cleared)
+        print(f'SCORE: {my_game.score}    LEVEL: {self.level}')
         print(my_game.get_printable())
         time.sleep(self.tick_speed)
 
@@ -343,16 +346,17 @@ class game:
                     for cord in shape.get_cords():
                         #Checking if the indevidual sqaure matches one of the sqaures in the selected row
                         if cord in [(x, index) for x in range(0, self.x + 1)]:
-                                #90: [(0, 0),(1, 0),(1, 1),(0, 1)]
-                                #for each cord in blueprint
-                                for x, y in shape.blueprint[shape.rotation]:
-                                    if cord == (shape.x + x, shape.y + y):
-                                        shape.blueprint[shape.rotation].pop(shape.blueprint[shape.rotation].index((x, y)))
-                                        self.apply_gravity()
-                                        self.update_shapes()
-                                        os.system('clear')
-                                        print(self.get_printable())
-                                        time.sleep(0.01)
+                            #90: [(0, 0),(1, 0),(1, 1),(0, 1)]
+                            #for each cord in blueprint
+                            for x, y in shape.blueprint[shape.rotation]:
+                                if cord == (shape.x + x, shape.y + y):
+                                    shape.blueprint[shape.rotation].pop(shape.blueprint[shape.rotation].index((x, y)))
+                                    self.apply_gravity()
+                                    self.update_shapes()
+                                    os.system('clear')
+                                    print(self.get_printable())
+                                    time.sleep(0.01)
+                            self.current_rows_cleared += 0.10
                                         
                             
         if line_combos == 1:
@@ -518,42 +522,46 @@ level_score = 0
 def init_game_over():
     global my_game
     time.sleep(0.5)
-        print('    ' + 53 * '_')
-        print(
-            f"""
-    SSSSS  CCCCC  OOO   RRRR   EEEEE  
-    S      C      O   O  R   R  E      
-    SSS    C      O   O  RRRR   EEEE   
-      S    C      O   O  R  R   E      
-    SSSSS  CCCCC  OOO   R   R  EEEEE  
-    """
-        )
-        number_result = ""
-        for layer in range(5):
-            layer_result = ""
-            for number in str(my_game.score):
-                layer_result += str(number_art[number][layer])
-            number_result += '    ' + layer_result + '\n'
-        print(number_result)
-        if str(input("Would You Like To Play Again?\ny/n")) == 'y':
-            game_over = False
-            my_game = game()
-            my_game.summon_random_shape()
+    print('    ' + 53 * '_')
+    print(
+        f"""
+SSSSS  CCCCC  OOO   RRRR   EEEEE  
+S      C      O   O  R   R  E      
+SSS    C      O   O  RRRR   EEEE   
+    S    C      O   O  R  R   E      
+SSSSS  CCCCC  OOO   R   R  EEEEE  
+"""
+    )
+    number_result = ""
+    for layer in range(5):
+        layer_result = ""
+        for number in str(my_game.score):
+            layer_result += str(number_art[number][layer])
+        number_result += '    ' + layer_result + '\n'
+    print(number_result)
+    if str(input("Would You Like To Play Again?\ny/n")) == 'y':
+        game_over = False
+        my_game = game()
+        my_game.summon_random_shape()
+
 while True:
     if not FORCE_STOP and not game_over:
         current = my_game.shapes[-1]
         my_game.main()
-        if my_game.tick_speed > 0.001:
-            my_game.tick_speed -= 0.001
+        #speed things up based on time
         
-        print(my_game.tick_speed)
+        if my_game.current_rows_cleared >= my_game.level * 10:
+            my_game.current_rows_cleared = 0
+            my_game.level += 1
+            my_game.tick_speed += 0.05
+
+
+
     elif game_over:
         game_over_text()
-        
-        else:
-            break
+        init_game_over()
     else:
-        if debug: print("STOPPING ALL PROCESSES")
+        break
 
 listener_thread.join()
 #testing
