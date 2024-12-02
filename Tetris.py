@@ -30,6 +30,25 @@ def start_listener():
     with keyboard.Listener(on_press=on_press) as listener:
         listener.join()
 
+def game_over_text():
+    # Text art for "Game Over"
+    game_over_text = """
+     GGGG   AAAAA  M   M EEEEE    OOO   V   V EEEEE RRRR  
+    G      A     A MM MM E       O   O  V   V E     R   R 
+    G  GG  AAAAAAA M M M EEEE    O   O  V   V EEEE  RRRR  
+    G   G  A     A M   M E       O   O   V V  E     R  R  
+     GGGG  A     A M   M EEEEE    OOO     V   EEEEE R   R
+    """
+    
+    # Clear the screen
+    os.system("clear")
+    
+    # Animation loop to simulate the "Game Over" text appearing with a slight delay
+    for line in game_over_text.splitlines():
+        print(line)
+        time.sleep(0.3)  # Delay between each line of the text art
+    
+
 if str(input('DEBUG?')):
     debug = True
     frame_inspect = True
@@ -40,6 +59,82 @@ listener_thread = threading.Thread(target=start_listener)
 listener_thread.start()
 FORCE_STOP = False
 summon_tick = None
+game_over = False
+number_art = {
+    '0': [
+        " OOO  ",
+        "O   O ",
+        "O   O ",
+        "O   O ",
+        " OOO  "
+    ],
+    '1': [
+        "  O   ",
+        " OO   ",
+        "  O   ",
+        "  O   ",
+        " OOO  "
+    ],
+    '2': [
+        " OOO  ",
+        "O   O ",
+        "   O  ",
+        "  O   ",
+        " OOO  "
+    ],
+    '3': [
+        " OOO  ",
+        "O   O ",
+        "   O  ",
+        "O   O ",
+        " OOO  "
+    ],
+    '4': [
+        "O   O ",
+        "O   O ",
+        " OOOO ",
+        "   O  ",
+        "   O  "
+    ],
+    '5': [
+        "OOOO  ",
+        "O     ",
+        "OOO   ",
+        "   O  ",
+        "OOOO  "
+    ],
+    '6': [
+        " OOO  ",
+        "O     ",
+        "OOO   ",
+        "O   O ",
+        " OOO  "
+    ],
+    '7': [
+        "OOOO  ",
+        "   O  ",
+        "  O   ",
+        " O    ",
+        "O     "
+    ],
+    '8': [
+        " OOO  ",
+        "O   O ",
+        " OOO  ",
+        "O   O ",
+        " OOO  "
+    ],
+    '9': [
+        " OOO  ",
+        "O   O ",
+        " OOO  ",
+        "   O  ",
+        " OOO  "
+    ]
+}
+
+# Example to print the number '3' in text art
+print(number_art['3'])
 
 colors = {
     'red':'🟥',
@@ -89,7 +184,7 @@ class game:
             my_game.apply_gravity()
             if summon_tick == 3:
                 my_game.scan_for_combos()
-                self.summon_random_shape()
+                random_shape = self.summon_random_shape()
             else:
                 summon_tick += 1
         else:
@@ -137,6 +232,7 @@ class game:
                 self.insert_shape(shape, shape.color)
 
     def apply_gravity(self, specifed_shape_list=[]):
+        global game_over
         success_list = []
         if not specifed_shape_list:
             list_of_shapes = self.shapes
@@ -153,6 +249,11 @@ class game:
                     success_list.append(True)
                 else:
                     if debug: print('GRAVITY STOPPED DUE TO COLLISION OR OBSOLETE CORD')
+                    if all([y == 0 
+                    for x, y in shape.get_cords()]):
+                        game_over = True
+                        print("I SAID GAME OVER!!!")
+
                     success_list.append(False)
             else:
                 if debug: print('gravity stopped')
@@ -408,14 +509,38 @@ all_shapes = [
     up_left(1, 1, 90, colors['black'])
 ]
 
-my_game = game(ttick_speed=0.6)
+my_game = game(tick_speed=0.2)
 
 my_game.add_shape(square(4, 10, 0, colors['yellow']))
 
 while True:
-    if not FORCE_STOP:
+    if not FORCE_STOP and not game_over:
+        print('not gameover')
+        print(game_over)
         current = my_game.shapes[-1]
         my_game.main()
+    elif game_over:
+        game_over_text()
+        time.sleep(0.5)
+        print('    ' + 53 * '_')
+        print(
+            f"""
+    SSSSS  CCCCC  OOO   RRRR   EEEEE  
+    S      C      O   O  R   R  E      
+    SSS    C      O   O  RRRR   EEEE   
+      S    C      O   O  R  R   E      
+    SSSSS  CCCCC  OOO   R   R  EEEEE  
+    """
+        )
+        number_result = ""
+        for layer in range(5):
+            layer_result = ""
+            for number in str(my_game.score):
+                layer_result += str(number_art[number][layer])
+            number_result += '    ' + layer_result + '\n'
+        print(number_result)
+        break
+        #break
     else:
         if debug: print("STOPPING ALL PROCESSES")
 
