@@ -514,17 +514,10 @@ my_game = game(tick_speed=0.2)
 my_game.summon_random_shape()
 level_score = 0
 #main game loop (this makes the game run!)
-while True:
-    if not FORCE_STOP and not game_over:
-        current = my_game.shapes[-1]
-        my_game.main()
-        if my_game.tick_speed > 0.001:
-            my_game.tick_speed -= 0.001
-        
-        print(my_game.tick_speed)
-    elif game_over:
-        game_over_text()
-        time.sleep(0.5)
+
+def init_game_over():
+    global my_game
+    time.sleep(0.5)
         print('    ' + 53 * '_')
         print(
             f"""
@@ -546,6 +539,17 @@ while True:
             game_over = False
             my_game = game()
             my_game.summon_random_shape()
+while True:
+    if not FORCE_STOP and not game_over:
+        current = my_game.shapes[-1]
+        my_game.main()
+        if my_game.tick_speed > 0.001:
+            my_game.tick_speed -= 0.001
+        
+        print(my_game.tick_speed)
+    elif game_over:
+        game_over_text()
+        
         else:
             break
     else:
