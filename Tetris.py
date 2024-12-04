@@ -10,15 +10,17 @@ def on_press(key):
     global my_game
     global FORCE_STOP
     if  key == keyboard.Key.left:
-            my_game.move_shape(current, -90)
+        my_game.move_shape(current, -90)
     elif key == keyboard.Key.right:
         my_game.move_shape(current, 90)
     elif key == keyboard.Key.up:
+        current.rotate_shape(next_rotation(current.rotation), my_game)
         current.rotate_shape(next_rotation(current.rotation), my_game)
     elif key == keyboard.Key.down:
         my_game.apply_gravity([current])
         my_game.score += 1
         print('')
+
 
     # Exit when the 'Esc' key is pressed
     if key == keyboard.Key.esc:
@@ -32,12 +34,13 @@ def start_listener():
 
 def game_over_text():
     # Text art for "Game Over"
-    game_over_text = """
-     GGGG   AAAAA  M   M EEEEE    OOO   V   V EEEEE RRRR  
-    G      A     A MM MM E       O   O  V   V E     R   R 
-    G  GG  AAAAAAA M M M EEEE    O   O  V   V EEEE  RRRR  
-    G   G  A     A M   M E       O   O   V V  E     R  R  
-     GGGG  A     A M   M EEEEE    OOO     V   EEEEE R   R
+    game_over_text = """    
+    ░██████╗░░█████╗░███╗░░░███╗███████╗  ░█████╗░██╗░░░██╗███████╗██████╗░
+    ██╔════╝░██╔══██╗████╗░████║██╔════╝  ██╔══██╗██║░░░██║██╔════╝██╔══██╗
+    ██║░░██╗░███████║██╔████╔██║█████╗░░  ██║░░██║╚██╗░██╔╝█████╗░░██████╔╝
+    ██║░░╚██╗██╔══██║██║╚██╔╝██║██╔══╝░░  ██║░░██║░╚████╔╝░██╔══╝░░██╔══██╗
+    ╚██████╔╝██║░░██║██║░╚═╝░██║███████╗  ╚█████╔╝░░╚██╔╝░░███████╗██║░░██║
+    ░╚═════╝░╚═╝░░╚═╝╚═╝░░░░░╚═╝╚══════╝  ░╚════╝░░░░╚═╝░░░╚══════╝╚═╝░░╚═╝
     """
     
     # Clear the screen
@@ -64,74 +67,84 @@ summon_tick = None
 game_over = False
 number_art = {
     '0': [
-        " OOO  ",
-        "O   O ",
-        "O   O ",
-        "O   O ",
-        " OOO  "
+        "░█████╗░",
+        "██╔══██╗",
+        "██║░░██║",
+        "██║░░██║",
+        "╚█████╔╝",
+        "░╚════╝░"
     ],
-    '1': [
-        "  O   ",
-        " OO   ",
-        "  O   ",
-        "  O   ",
-        " OOO  "
+    '1': [     
+        "░░███╗░░",
+        "░████║░░",
+        "██╔██║░░",
+        "╚═╝██║░░",
+        "███████╗",
+        "╚══════╝"
     ],
     '2': [
-        " OOO  ",
-        "O   O ",
-        "   O  ",
-        "  O   ",
-        " OOO  "
+        "██████╗░",
+        "╚════██╗",
+        "░░███╔═╝",
+        "██╔══╝░░",
+        "███████╗",
+        "╚══════╝"
     ],
     '3': [
-        " OOO  ",
-        "O   O ",
-        "   O  ",
-        "O   O ",
-        " OOO  "
+        "██████╗░",
+        "╚════██╗",
+        "░█████╔╝",
+        "░╚═══██╗",
+        "██████╔╝",
+        "╚═════╝░"
     ],
     '4': [
-        "O   O ",
-        "O   O ",
-        " OOOO ",
-        "   O  ",
-        "   O  "
+        "░░██╗██╗",
+        "░██╔╝██║",
+        "██╔╝░██║",
+        "███████║",
+        "╚════██║",
+        "░░░░░╚═╝"
     ],
     '5': [
-        "OOOO  ",
-        "O     ",
-        "OOO   ",
-        "   O  ",
-        "OOOO  "
+        "███████╗",
+        "██╔════╝",
+        "██████╗░",
+        "╚════██╗",
+        "██████╔╝",
+        "╚═════╝░"
     ],
     '6': [
-        " OOO  ",
-        "O     ",
-        "OOO   ",
-        "O   O ",
-        " OOO  "
+        "░█████╗░",
+        "██╔═══╝░",
+        "██████╗░",
+        "██╔══██╗",
+        "╚█████╔╝",
+        "░╚════╝░"
     ],
     '7': [
-        "OOOO  ",
-        "   O  ",
-        "  O   ",
-        " O    ",
-        "O     "
+        "███████╗",
+        "╚════██║",
+        "░░░░██╔╝",
+        "░░░██╔╝░",
+        "░░██╔╝░░",
+        "░░╚═╝░░░"
     ],
     '8': [
-        " OOO  ",
-        "O   O ",
-        " OOO  ",
-        "O   O ",
-        " OOO  "
+        "░█████╗░",
+        "██╔══██╗",
+        "╚█████╔╝",
+        "██╔══██╗",
+        "╚█████╔╝",
+        "░╚════╝░"
     ],
     '9': [
-        " OOO  ",
-        "O   O ",
-        " OOO  ",
-        "   O  ",
-        " OOO  "
+        "░█████╗░"
+        "██╔══██╗",
+        "╚██████║",
+        "░╚═══██║",
+        "░█████╔╝",
+        "░╚════╝░"
     ]
 }
 
@@ -165,7 +178,7 @@ directions = {
 
 class game:
     global all_shapes
-    def __init__(self, x=10, y=20, gravity_scale=1, tick_speed=0.3):
+    def __init__(self, x=10, y=20, gravity_scale=1, tick_speed=0.4):
         self.x = x
         self.y = y
         self.contents = [[colors['white'] for column in range(self.x)] for row in range(self.y)]
@@ -181,7 +194,6 @@ class game:
         global frame_inspect
         global summon_tick
         if not my_game.apply_gravity()[-1]:
-            print('summon now')
             my_game.apply_gravity()
             if summon_tick == 3:
                 my_game.scan_for_combos()
@@ -197,6 +209,8 @@ class game:
             os.system('clear')
             print('\n')
         print(my_game.current_rows_cleared)
+        #yeet
+        #my_game.current_rows_cleared += 1
         print(f'SCORE: {my_game.score}    LEVEL: {self.level}')
         print(my_game.get_printable())
         time.sleep(self.tick_speed)
@@ -512,7 +526,7 @@ all_shapes = [
     up_left(1, 1, 90, colors['black'])
 ]
 
-my_game = game(tick_speed=0.2)
+my_game = game()
 
 my_game.summon_random_shape()
 level_score = 0
@@ -521,24 +535,42 @@ level_score = 0
 def init_game_over():
     global my_game
     time.sleep(0.5)
-    print('    ' + 53 * '_')
+    print('    ' + 75 * '_')
     print(
         f"""
-SSSSS  CCCCC  OOO   RRRR   EEEEE  
-S      C      O   O  R   R  E      
-SSS    C      O   O  RRRR   EEEE   
-    S    C      O   O  R  R   E      
-SSSSS  CCCCC  OOO   R   R  EEEEE  
+    ░██████╗░█████╗░░█████╗░██████╗░███████╗
+    ██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔════╝
+    ╚█████╗░██║░░╚═╝██║░░██║██████╔╝█████╗░░
+    ░╚═══██╗██║░░██╗██║░░██║██╔══██╗██╔══╝░░
+    ██████╔╝╚█████╔╝╚█████╔╝██║░░██║███████╗
+    ╚═════╝░░╚════╝░░╚════╝░╚═╝░░╚═╝╚══════╝
 """
     )
     number_result = ""
-    for layer in range(5):
+    for layer in range(6):
         layer_result = ""
         for number in str(my_game.score):
             layer_result += str(number_art[number][layer])
         number_result += '    ' + layer_result + '\n'
     print(number_result)
-    if str(input("Would You Like To Play Again?\ny/n")) == 'y':
+    if str(input(f"""
+    {75 * '_'}
+    
+
+    ██████╗░██╗░░░░░░█████╗░██╗░░░██╗  ░█████╗░░██████╗░░█████╗░██╗███╗░░██╗░█████╗░
+    ██╔══██╗██║░░░░░██╔══██╗╚██╗░██╔╝  ██╔══██╗██╔════╝░██╔══██╗██║████╗░██║██╔══██╗
+    ██████╔╝██║░░░░░███████║░╚████╔╝░  ███████║██║░░██╗░███████║██║██╔██╗██║╚═╝███╔╝
+    ██╔═══╝░██║░░░░░██╔══██║░░╚██╔╝░░  ██╔══██║██║░░╚██╗██╔══██║██║██║╚████║░░░╚══╝░
+    ██║░░░░░███████╗██║░░██║░░░██║░░░  ██║░░██║╚██████╔╝██║░░██║██║██║░╚███║░░░██╗░░
+    ╚═╝░░░░░╚══════╝╚═╝░░╚═╝░░░╚═╝░░░  ╚═╝░░╚═╝░╚═════╝░╚═╝░░╚═╝╚═╝╚═╝░░╚══╝░░░╚═╝░░
+
+    ██╗░░░██╗░░░░██╗███╗░░██╗
+    ╚██╗░██╔╝░░░██╔╝████╗░██║
+    ░╚████╔╝░░░██╔╝░██╔██╗██║
+    ░░╚██╔╝░░░██╔╝░░██║╚████║
+    ░░░██║░░░██╔╝░░░██║░╚███║
+    ░░░╚═╝░░░╚═╝░░░░╚═╝░░╚══╝
+""")) == 'y':
         game_over = False
         my_game = game()
         my_game.summon_random_shape()
@@ -557,7 +589,7 @@ print("""
 
 if input("""
     
-    
+
 █▀█ █▀█ █▀▀ █▀ █▀   █▀▀ █▄░█ ▀█▀ █▀▀ █▀█   ▀█▀ █▀█   █▀ ▀█▀ ▄▀█ █▀█ ▀█▀
 █▀▀ █▀▄ ██▄ ▄█ ▄█   ██▄ █░▀█ ░█░ ██▄ █▀▄   ░█░ █▄█   ▄█ ░█░ █▀█ █▀▄ ░█░
 
@@ -571,7 +603,8 @@ while True:
         if my_game.current_rows_cleared >= my_game.level * 10:
             my_game.current_rows_cleared = 0
             my_game.level += 1
-            my_game.tick_speed += 0.05
+            if my_game.tick_speed > 0.01:
+                my_game.tick_speed -= 0.05
 
 
 
