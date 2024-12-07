@@ -502,7 +502,7 @@ class line(shape):
             (2, 0)
             ],
         }
-        
+
 class t_arch(shape):
     def __init__(self, x, y, rotation, color):
         super().__init__(x, y, rotation, color)
@@ -554,7 +554,8 @@ def next_rotation(current_direction):
 all_shapes = [
     square(1, 2, 90, colors['red']), 
     line(1, 1, 90, colors['black']),
-    up_left(1, 1, 90, colors['black'])
+    up_left(1, 1, 90, colors['black']),
+    t_arch(1, 1, 90, colors['black'])
 ]
 
 my_game = game()
@@ -603,6 +604,7 @@ def init_game_over():
     ░░░╚═╝░░░╚═╝░░░░╚═╝░░╚══╝
 """)) == 'y':
         game_over = False
+        FORCE_STOP = False
         my_game = game()
         my_game.summon_random_shape()
 
