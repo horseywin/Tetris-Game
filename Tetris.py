@@ -18,7 +18,6 @@ def on_press(key):
     elif key == keyboard.Key.down:
         my_game.apply_gravity([current])
         my_game.score += 1
-        print('')
 
 
     # Exit when the 'Esc' key is pressed
@@ -193,7 +192,8 @@ class game:
         global current
         global frame_inspect
         global summon_tick
-        if not my_game.apply_gravity()[-1]:
+        #if not success list?!!
+        if not copy.deepcopy(my_game).apply_gravity()[-1]:
             my_game.apply_gravity()
             if summon_tick == 3:
                 my_game.scan_for_combos()
@@ -205,14 +205,6 @@ class game:
         my_game.apply_gravity()
         my_game.clear()
         my_game.update_shapes()
-        if not frame_inspect:
-            os.system('clear')
-            print('\n')
-        print(my_game.current_rows_cleared)
-        #yeet
-        #my_game.current_rows_cleared += 1
-        print(f'SCORE: {my_game.score}    LEVEL: {self.level}')
-        print(my_game.get_printable())
         time.sleep(self.tick_speed)
 
     def get_merged_rows(self):
@@ -367,8 +359,6 @@ class game:
                                     self.apply_gravity()
                                     self.update_shapes()
                                     os.system('clear')
-                                    print(self.get_printable())
-                                    time.sleep(0.01)
                             self.current_rows_cleared += 0.10
                                         
                             
@@ -558,7 +548,18 @@ all_shapes = [
     t_arch(1, 1, 90, colors['black'])
 ]
 
+def update_frame():
+    global my_game
+    global FORCE_STOP
+    global game_over
+    while True:
+        if not game_over and not FORCE_STOP:
+            print(f'SCORE: {my_game.score}    LEVEL: {my_game.level}')
+            print(my_game.get_printable())
+            os.system('clear')
+
 my_game = game()
+
 
 my_game.summon_random_shape()
 level_score = 0
@@ -583,7 +584,10 @@ def init_game_over():
     for layer in range(6):
         layer_result = ""
         for number in str(my_game.score):
-            layer_result += str(number_art[number][layer])
+            try:
+                layer_result += str(number_art[number][layer])
+            except:
+                print("ERROR")
         number_result += '    ' + layer_result + '\n'
     print(number_result)
     if str(input(f"""
@@ -627,6 +631,8 @@ if input("""
 █▀▀ █▀▄ ██▄ ▄█ ▄█   ██▄ █░▀█ ░█░ ██▄ █▀▄   ░█░ █▄█   ▄█ ░█░ █▀█ █▀▄ ░█░
 
 """): pass
+frame_thead = threading.Thread(target=update_frame, daemon=True)
+frame_thead.start()
 while True:
     if not FORCE_STOP and not game_over:
         current = my_game.shapes[-1]
@@ -651,27 +657,3 @@ while True:
 listener_thread.join()
 #testing
 
-"""
-my_line = line(2, 3, 0)
-my_game.insert_shape(my_line, '🟪')
-print(my_line.get_cords())
-print(my_game.get_printable())
-"""
-"""
-for _ in range(100):
-    my_line = line(random.randint(0, 8), random.randint(0, 15), 0)
-    print(my_line.get_cords())
-    my_game.insert_shape(my_line, '⬛')
-    print(my_game.get_printable())
-    time.sleep(0.1)
-    my_game.clear()
-    os.system('clear')
-"""
-"""
-for y in range(10):
-    my_game.clear()
-    my_game.insert_shape(square(4, y, 0), '🟦')
-    print(my_game.get_printable())
-    time.sleep(0.1)
-    os.system('clear')
-"""
