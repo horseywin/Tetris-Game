@@ -15,7 +15,6 @@ def on_press(key):
         my_game.move_shape(current, 90)
     elif key == keyboard.Key.up:
         current.rotate_shape(next_rotation(current.rotation), my_game)
-        current.rotate_shape(next_rotation(current.rotation), my_game)
     elif key == keyboard.Key.down:
         my_game.apply_gravity([current])
         my_game.score += 1
@@ -64,6 +63,7 @@ listener_thread = threading.Thread(target=start_listener)
 listener_thread.start()
 FORCE_STOP = False
 summon_tick = None
+
 game_over = False
 number_art = {
     '0': [
@@ -566,6 +566,7 @@ level_score = 0
 
 def init_game_over():
     global my_game
+    global FORCE_STOP
     time.sleep(0.5)
     print('    ' + 75 * '_')
     print(
@@ -587,7 +588,6 @@ def init_game_over():
     print(number_result)
     if str(input(f"""
     {75 * '_'}
-    
 
     ██████╗░██╗░░░░░░█████╗░██╗░░░██╗  ░█████╗░░██████╗░░█████╗░██╗███╗░░██╗░█████╗░
     ██╔══██╗██║░░░░░██╔══██╗╚██╗░██╔╝  ██╔══██╗██╔════╝░██╔══██╗██║████╗░██║██╔══██╗
@@ -603,10 +603,10 @@ def init_game_over():
     ░░░██║░░░██╔╝░░░██║░╚███║
     ░░░╚═╝░░░╚═╝░░░░╚═╝░░╚══╝
 """)) == 'y':
+        print('resetting game...')
         game_over = False
         FORCE_STOP = False
-        my_game = game()
-        my_game.summon_random_shape()
+
 
 os.system("clear")
 print("""
@@ -638,12 +638,13 @@ while True:
             my_game.level += 1
             if my_game.tick_speed > 0.01:
                 my_game.tick_speed -= 0.05
-
-
-
     elif game_over:
         game_over_text()
         init_game_over()
+        game_over = False
+        my_game = copy.deepcopy(game())
+        my_game.summon_random_shape()
+        continue
     else:
         break
 
