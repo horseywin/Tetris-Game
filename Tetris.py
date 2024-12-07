@@ -502,6 +502,37 @@ class line(shape):
             (2, 0)
             ],
         }
+        
+class t_arch(shape):
+    def __init__(self, x, y, rotation, color):
+        super().__init__(x, y, rotation, color)
+        self.blueprint = {
+            180: [
+            (0, 0),
+            (1, 0),
+            (2, 0),
+            (1, 1)
+            ],
+            -90: [
+            (1, 0),
+            (1, 1),
+            (0, 1),
+            (1, 2)
+            ],
+            90: [
+            (0, 0),#
+            (0, 1),#
+            (1, 1),#
+            (0, 2)
+            ],
+            0: [
+            (1, 0),
+            (0, 1),
+            (1, 1),
+            (2, 1)
+            ],
+        }
+
 
 
 def next_rotation(current_direction):
