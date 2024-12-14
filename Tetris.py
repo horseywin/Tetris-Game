@@ -1,3 +1,4 @@
+
 from pynput import keyboard
 import threading
 import os
@@ -203,8 +204,7 @@ class game:
         else:
             summon_tick = 0
         my_game.apply_gravity()
-        my_game.clear()
-        my_game.update_shapes()
+       
         time.sleep(self.tick_speed)
 
     def get_merged_rows(self):
@@ -557,6 +557,8 @@ def update_frame():
             print(f'SCORE: {my_game.score}    LEVEL: {my_game.level}')
             print(my_game.get_printable())
             os.system('clear')
+            my_game.clear()
+            my_game.update_shapes()
 
 my_game = game()
 
@@ -656,4 +658,3 @@ while True:
 
 listener_thread.join()
 #testing
-
