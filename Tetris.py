@@ -250,7 +250,6 @@ class game:
             if debug: print([y for x, y in shape.get_cords()])
             if debug: print([y < self.y - 1 for x, y in shape.get_cords()])
             if all([y < self.y - 1 for x, y in shape.get_cords()]):
-                if debug: print('gravity touch test', [self.contents[y+1][x] == colors['white'] or (x, y+1) in shape.get_cords() for x, y in shape.get_cords()])
                 if all([self.contents[y+1][x] == colors['white'] or (x, y+1) in shape.get_cords() for x, y in shape.get_cords()]):   
                     if debug: print("appling gravity")
                     shape.y += self.gravity_scale
@@ -403,31 +402,31 @@ class up_left(shape):
         super().__init__(x, y, rotation, color)
         self.blueprint = {
             #working
-            180: [
-            (-1, -1),
-            (0, -1),
-            (0, 0),
-            (0, 1)
-            ],
-            #working
             90: [
             (0, 0),
             (1, 0),
             (2, 0),
-            (2, -1)
+            (0, 1)
             ],
-            -90: [
+            #working
+            180: [
             (0, 0),
             (1, 0),
-            (2, 0),
-            (2, -1)
+            (1, 1),
+            (1, 2)
+            ],
+            -90: [
+            (0, 1),
+            (1, 1),
+            (2, 1),
+            (2, 0)
             ],
             
             0: [
-            (1, 0),
-            (1, 1),
-            (1, 2),
-            (2, 2)
+            (0, 0),
+            (0, 1),
+            (0, 2),
+            (1, 2)
             ],
         }
 
@@ -462,7 +461,6 @@ class square(shape):
             ],
         }
         
-
 class line(shape):
     def __init__(self, x, y, rotation, color):
         super().__init__(x, y, rotation, color)
@@ -523,7 +521,38 @@ class t_arch(shape):
             ],
         }
 
-
+class up_right(shape):
+    def __init__(self, x, y, rotation, color):
+        super().__init__(x, y, rotation, color)
+        self.blueprint = {
+            #working
+            -90: [
+            (0, 0),
+            (1, 0),
+            (2, 0),
+            (2, 1)
+            ],
+            #working
+            180: [
+            (0, 0),
+            (1, 0),
+            (0, 1),
+            (0, 2)
+            ],
+            90: [
+            (0, 0),
+            (0, 1),
+            (1, 1),
+            (2, 1)
+            ],
+            
+            0: [
+            (1, 0),
+            (1, 1),
+            (1, 2),
+            (0, 2)
+            ],
+        }
 
 def next_rotation(current_direction):
     global directions
@@ -545,7 +574,8 @@ all_shapes = [
     square(1, 2, 90, colors['red']), 
     line(1, 1, 90, colors['black']),
     up_left(1, 1, 90, colors['black']),
-    t_arch(1, 1, 90, colors['black'])
+    t_arch(1, 1, 90, colors['black']),
+    up_right(1, 1, 90, colors['black'])
 ]
 
 def update_frame():
@@ -554,16 +584,19 @@ def update_frame():
     global game_over
     while True:
         if not game_over and not FORCE_STOP:
+            
+            os.system('clear')
             print(f'SCORE: {my_game.score}    LEVEL: {my_game.level}')
             print(my_game.get_printable())
-            os.system('clear')
             my_game.clear()
             my_game.update_shapes()
+            time.sleep(0.01)
 
 my_game = game()
 
 
 my_game.summon_random_shape()
+#my_game.summon_specifed_shape(up_right(1, 1, 90, colors['black']),)
 level_score = 0
 #main game loop (this makes the game run!)
 
