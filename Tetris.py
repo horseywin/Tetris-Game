@@ -250,9 +250,16 @@ class game:
             if debug: print([y for x, y in shape.get_cords()])
             if debug: print([y < self.y - 1 for x, y in shape.get_cords()])
             if all([y < self.y - 1 for x, y in shape.get_cords()]):
-                if all([self.contents[y+1][x] == colors['white'] or (x, y+1) in shape.get_cords() for x, y in shape.get_cords()]):   
+                if all([(y+1 < self.y and (self.contents[y+1][x] == colors['white'] or (x, y+1) in shape.get_cords())) for x, y in shape.get_cords()]):   
                     if debug: print("appling gravity")
                     shape.y += self.gravity_scale
+                    #Refresh
+                    os.system('clear')
+                    print(f'SCORE: {my_game.score}    LEVEL: {my_game.level}')
+                    print(my_game.get_printable())
+                    my_game.clear()
+                    my_game.update_shapes()
+                    #end of refresh script
                     success_list.append(True)
                 else:
                     if debug: print('GRAVITY STOPPED DUE TO COLLISION OR OBSOLETE CORD')
@@ -331,6 +338,7 @@ class game:
         random.choice(rotations),
         random_color)
         )
+
     """
     •	Single (1 line cleared): 100 points x current level.
 	•	Double (2 lines cleared): 300 points x current level.
@@ -355,10 +363,14 @@ class game:
                             for x, y in shape.blueprint[shape.rotation]:
                                 if cord == (shape.x + x, shape.y + y):
                                     shape.blueprint[shape.rotation].pop(shape.blueprint[shape.rotation].index((x, y)))
-                                    self.apply_gravity()
-                                    self.update_shapes()
                                     os.system('clear')
+                                    print(f'SCORE: {my_game.score}    LEVEL: {my_game.level}')
+                                    print(my_game.get_printable())
+                                    my_game.clear()
+                                    my_game.update_shapes()
+                                    time.sleep(0.05)
                             self.current_rows_cleared += 0.10
+        
                                         
                             
         if line_combos == 1:
