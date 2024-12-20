@@ -48,7 +48,7 @@ def game_over_text():
     # Animation loop to simulate the "Game Over" text appearing with a slight delay
     for line in game_over_text.splitlines():
         print(line)
-        time.sleep(0.3)  # Delay between each line of the text art
+        time.sleep(0.5)  # Delay between each line of the text art
     
 
 if False:
@@ -602,7 +602,7 @@ def update_frame():
             print(my_game.get_printable())
             my_game.clear()
             my_game.update_shapes()
-            time.sleep(0.01)
+            time.sleep(0.05)
 
 my_game = game()
 
@@ -672,6 +672,7 @@ print("""
 )
 
 if input("""
+    
     
 
 █▀█ █▀█ █▀▀ █▀ █▀   █▀▀ █▄░█ ▀█▀ █▀▀ █▀█   ▀█▀ █▀█   █▀ ▀█▀ ▄▀█ █▀█ ▀█▀
