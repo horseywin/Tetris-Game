@@ -1,2 +1,2 @@
 # Tetris Game
- A simple tetris game made with python
+ A simple Tetris game made with python using emojis. 100% my code.
