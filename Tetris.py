@@ -608,7 +608,39 @@ def update_frame():
 
 my_game = game()
 
+#LEVEL 2 IS BAD CRSHHH
 
+"""
+x 0
+y 19
+x 0
+y 20
+Exception in thread Thread-3:
+Traceback (most recent call last):
+  File "/Users/zacharycheung/Library/Mobile Documents/com~apple~CloudDocs/Useful stuff (Local+Cloud)/Code/Python/Cool Python Projects/Tetris-Game/Tetris.py", line 223, in insert_shape
+    self.contents[y][x] = character
+IndexError: list index out of range
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/threading.py", line 973, in _bootstrap_inner
+    self.run()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/threading.py", line 910, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/zacharycheung/Library/Mobile Documents/com~apple~CloudDocs/Useful stuff (Local+Cloud)/Code/Python/Cool Python Projects/Tetris-Game/Tetris.py", line 606, in update_frame
+    my_game.update_shapes()
+  File "/Users/zacharycheung/Library/Mobile Documents/com~apple~CloudDocs/Useful stuff (Local+Cloud)/Code/Python/Cool Python Projects/Tetris-Game/Tetris.py", line 242, in update_shapes
+    self.insert_shape(shape, shape.color)
+  File "/Users/zacharycheung/Library/Mobile Documents/com~apple~CloudDocs/Useful stuff (Local+Cloud)/Code/Python/Cool Python Projects/Tetris-Game/Tetris.py", line 228, in insert_shape
+    raise IndexError('failed to insert shape: index out of range')
+IndexError: failed to insert shape: index out of range
+
+
+
+
+
+"""
 my_game.summon_random_shape()
 #my_game.summon_specifed_shape(up_right(1, 1, 90, colors['black']),)
 level_score = 0
