@@ -8,7 +8,6 @@ import math
 import copy
 
 def on_press(key):
-    global summon_tick
     global my_game
     global FORCE_STOP
     if  key == keyboard.Key.left:
@@ -19,8 +18,7 @@ def on_press(key):
         current.rotate_shape(next_rotation(current.rotation), my_game)
     elif key == keyboard.Key.down:
         my_game.apply_gravity([current])
-        if not summon_tick:
-            my_game.score += 1
+        my_game.score += 1
 
 
     # Exit when the 'Esc' key is pressed
@@ -249,12 +247,10 @@ class game:
         else:
             list_of_shapes = specifed_shape_list
         for shape in list_of_shapes:
-            if debug: print([y for x, y in shape.get_cords()])
-            if debug: print([y < self.y - 1 for x, y in shape.get_cords()])
             if all([y < self.y - 1 for x, y in shape.get_cords()]):
                 if all([(y+1 < self.y and (self.contents[y+1][x] == colors['white'] or (x, y+1) in shape.get_cords())) for x, y in shape.get_cords()]):   
                     if debug: print("appling gravity")
-                    shape.y += self.gravity_scale * self.level
+                    shape.y += self.gravity_scale
                     #Refresh
                     os.system('clear')
                     print(f'SCORE: {my_game.score}    LEVEL: {my_game.level}')
@@ -270,7 +266,7 @@ class game:
                         game_over = True
                         print("I SAID GAME OVER!!!")
 
-                    success_list.append(False)
+                    success_list.append(True)
             else:
                 if debug: print('gravity stopped')
                 success_list.append(False)
