@@ -1,12 +1,25 @@
+#!python 3
 
+"USING IDEAS OR CODE???" 
+"MAKE SURE TO CREDIT @HORSEYWIN IN README.MD!"
+"DON\' be that GUY!!!"
+
+#importing modules...
 from pynput import keyboard
+#run multiple scripts at a time
 import threading
+#clear screen using os.system('clear') - basically control the terminal
 import os
+#use time to stall the program later on
 import time
+#randomise colors and shapes ect ect
 import random
+#Calculations
 import math
+#make unique copies of objects
 import copy
 
+#defining the keyboard listener
 def on_press(key):
     global summon_tick
     global my_game
@@ -23,16 +36,18 @@ def on_press(key):
             my_game.score += 1
 
 
-    # Exit when the 'Esc' key is pressed
+    # Exit when the escape key is pressed
     if key == keyboard.Key.esc:
         print("Exiting...")
         FORCE_STOP = True
         return False  # Stops the listener
 
+#this function triggers the keyboard listener
 def start_listener():
     with keyboard.Listener(on_press=on_press) as listener:
         listener.join()
 
+# this function prints the gameover text
 def game_over_text():
     # Text art for "Game Over"
     game_over_text = """    
@@ -52,7 +67,7 @@ def game_over_text():
         print(line)
         time.sleep(0.5)  # Delay between each line of the text art
     
-
+#doing this for debug purposes.. IGNORE!!!
 if False:
     debug = True
     frame_inspect = True
@@ -60,13 +75,14 @@ else:
     debug = False
     frame_inspect = False
 
-
+#init the keyboard listener
 listener_thread = threading.Thread(target=start_listener)
 listener_thread.start()
 FORCE_STOP = False
 summon_tick = None
 
 game_over = False
+#defining a dictionary with all the number art so i don't have to repeat the code
 number_art = {
     '0': [
         "░█████╗░",
@@ -150,7 +166,7 @@ number_art = {
     ]
 }
 
-
+# defining a dictionary with all the pre-definied colors so i don't have to repeat the code
 colors = {
     'red':'🟥',
     'orange':'🟧',
@@ -163,6 +179,7 @@ colors = {
     'white': '⬜'
     }
 
+#all possible rotations
 rotations = [
     0,
     90,
@@ -178,11 +195,13 @@ directions = {
     
 }
 
+#this class defined the game canvas (the white game area)
 class game:
     global all_shapes
     def __init__(self, x=10, y=20, gravity_scale=1, tick_speed=0.4):
         self.x = x
         self.y = y
+        #automatically adding the nessesary white squares to the self.contents variable
         self.contents = [[colors['white'] for column in range(self.x)] for row in range(self.y)]
         self.shapes = []
         self.gravity_scale = gravity_scale
@@ -411,6 +430,7 @@ class shape:
     def get_cords(self):
         return [(self.x + x, self.y + y) for x, y in self.blueprint[self.rotation]]
 
+#defining the shape of the shapes below...
 class up_left(shape):
     def __init__(self, x, y, rotation, color):
         super().__init__(x, y, rotation, color)
@@ -568,6 +588,7 @@ class up_right(shape):
             ],
         }
 
+#function to find the next rotation clockwise
 def next_rotation(current_direction):
     global directions
     if current_direction in directions:
@@ -608,7 +629,7 @@ def update_frame():
 
 my_game = game()
 
-#LEVEL 2 IS BAD CRSHHH
+#IGNORE THE DEBUG COMMENTS!!!!
 
 """
 x 0
