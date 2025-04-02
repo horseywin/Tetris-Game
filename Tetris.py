@@ -1,8 +1,16 @@
 #!python 3
-
+#⬇️ Tetris.py - A tetris game made by horseywin ⬇️
 "USING IDEAS OR CODE???" 
 "MAKE SURE TO CREDIT @HORSEYWIN IN README.MD!"
-"DON\' be that GUY!!!"
+"DON\'t be that GUY!!!"
+
+#Procedure below
+"""
+Clear game objects
+One by one add the shape objects (Yes everything is an object)
+Check each shape for collisions, potential gravity ect ect
+Print them
+"""
 
 #importing modules...
 from pynput import keyboard
@@ -195,7 +203,7 @@ directions = {
     
 }
 
-#this class defined the game canvas (the white game area)
+#this class defined the game canvas (the white game area) and it's cleared every frame
 class game:
     global all_shapes
     def __init__(self, x=10, y=20, gravity_scale=1, tick_speed=0.4):
